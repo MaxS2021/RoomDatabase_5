@@ -3,11 +3,10 @@ package com.example.roomdatabase.fragments.update
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -40,6 +39,9 @@ class UpdateFragment : Fragment() {
             updateItem()
         }
 
+        //Add menu delete
+        setHasOptionsMenu(true)
+
         return bind.root    //inflater.inflate(R.layout.fragment_update, container, false)
     }
 
@@ -61,6 +63,32 @@ class UpdateFragment : Fragment() {
 
     private fun inputCheck(firstName: String, lastName: String, age: Editable): Boolean {
         return firstName.isNotEmpty() && lastName.isNotEmpty() && age.isNotEmpty()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.delete_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_delete){
+            deleteUser()
+        }
+        return super.onOptionsItemSelected(item)
+
+    }
+
+    private fun deleteUser() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setPositiveButton("Да") { _, _ ->
+            mUserViewModel.deleteUser(args.currentUser)
+            Toast.makeText(requireContext(), "Запись ${args.currentUser.firsName} успешно удалена", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_updateFragment_to_listFragment)
+        }
+        builder.setNegativeButton("Нет"){_, _ ->}
+        builder.setTitle("Удалить запись: ${args.currentUser.firsName}?")
+        builder.setMessage("Вы уверенны, что хотите удалить запись: ${args.currentUser.firsName}?")
+        builder.create().show()
     }
 
 }
