@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.roomdatabase.R
 import com.example.roomdatabase.model.User
@@ -36,12 +37,13 @@ class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
         val rowLayout = holder.itemView.findViewById<ConstraintLayout>(R.id.rowLayout)
 
         id_txt.text = currentItem.id.toString()
-        firstName_txt.text = currentItem.id.toString()
-        lastName_txt.text = currentItem.id.toString()
-        age_txt.text = currentItem.id.toString()
+        firstName_txt.text = currentItem.firsName.toString()
+        lastName_txt.text = currentItem.lastName.toString()
+        age_txt.text = currentItem.age.toString()
 
         rowLayout.setOnClickListener {
-            ///val action = holder.itemView.ListFragmentDirections.actionListFragmentToUpdateFragment(currentItem)
+            val action = ListFragmentDirections.actionListFragmentToUpdateFragment(currentItem)
+            holder.itemView.findNavController().navigate(action)
         }
 
     }
